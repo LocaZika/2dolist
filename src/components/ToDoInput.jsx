@@ -13,6 +13,11 @@ export default class ToDoInput extends Component {
   handleChangeTask = (e) => {
     this.taskName = e.target.value;
   }
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      this.handleAddTask();
+    }
+  }
   handleAddTask = () => {
     let taskName = this.taskName;
     const task = {
@@ -38,7 +43,7 @@ export default class ToDoInput extends Component {
   render() {
     return (
       <div className='input-task'>
-        <input type="text" name="task" id='input-task' placeholder='Add task' onChange={this.handleChangeTask} />
+        <input type="text" name="task" id='input-task' placeholder='Add task' onChange={this.handleChangeTask} onKeyDown={this.handleKeyDown} />
         <button onClick={this.handleAddTask}>
           <FontAwesomeIcon icon="fa-solid fa-plus" style={{
             color: "rgb(25, 118, 210)",
