@@ -22,6 +22,8 @@ export default class ToDoInput extends Component {
     }
     const tasks = [task, ...this.props.tasks];
     this.props.onAddTask(tasks);
+    const inputTask = document.getElementById("input-task");
+    inputTask.value = '';
   }
   handleRemoveAllCompletedTasks = () => {
     const tasks = this.props.tasks;
@@ -36,7 +38,7 @@ export default class ToDoInput extends Component {
   render() {
     return (
       <div className='input-task'>
-        <input type="text" name="task" placeholder='Add task' onChange={this.handleChangeTask} />
+        <input type="text" name="task" id='input-task' placeholder='Add task' onChange={this.handleChangeTask} />
         <button onClick={this.handleAddTask}>
           <FontAwesomeIcon icon="fa-solid fa-plus" style={{
             color: "rgb(25, 118, 210)",
