@@ -1,0 +1,33 @@
+.check{
+  color: rgb(80, 250, 123);
+}
+.delete{
+  color: rgb(255, 85, 85);
+}
+.completed{
+  text-decoration: line-through;
+  color: #808080;
+}
+ul{
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  padding: 1rem;
+  li{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: .1rem solid #fff;
+    border-radius: .5rem;
+    height: 100%;
+    padding: 0 2.4rem;
+    svg{
+      font-size: 2.4rem;
+    }
+    p{
+      color: #bd93f9;
+      font-size: 2.4rem;
+      line-height: 1.334;
+    }
+  }
+}

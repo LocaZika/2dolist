@@ -1,0 +1,16 @@
+body{
+  background-color: #282a36;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+button {
+  border: none;
+  background-color: transparent;
+  padding: .8rem;
+  cursor: pointer;
+}
+.app{
+  padding: 2.4rem;
+}
