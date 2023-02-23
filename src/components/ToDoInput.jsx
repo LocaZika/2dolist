@@ -3,15 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../assets/scss/inputTask.scss';
+import { v4 as uuid } from 'uuid';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 library.add(faPlus);
 export default class ToDoInput extends Component {
   constructor(props) {
-    super();
-    this.taskName = '';
+    super(props);
+    this.state = {
+      taskName: ''
+    }
   }
   handleChangeTask = (e) => {
-    this.taskName = e.target.value;
+    this.setState({taskName: e.target.value});
   }
   handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -19,36 +24,49 @@ export default class ToDoInput extends Component {
     }
   }
   handleAddTask = () => {
-    let taskName = this.taskName;
-    const task = {
-      id: this.props.tasks.length + 1,
-      name: taskName,
-      isCompleted: false,
+    const {taskName} = this.state;
+    const {onAddTask} = this.props;
+    if (taskName.trim() !== "") {
+      const task = {
+        id: uuid(),
+        name: taskName,
+        isCompleted: false,
+      }
+      onAddTask(task);
+      this.setState({taskName: ''});
+      toast.success("Task added successfully", {
+        icon: '🔥',
+      })
+    }else{
+      toast.error("Please enter a task", {
+        icon: '😑',
+      })
     }
-    const tasks = [task, ...this.props.tasks];
-    this.props.onAddTask(tasks);
-    const inputTask = document.getElementById("input-task");
-    inputTask.value = '';
   }
   handleRemoveAllCompletedTasks = () => {
-    const tasks = this.props.tasks;
-    tasks.forEach((task, index) => {
-      if(task.isCompleted === true) {
-        tasks.splice(index, 1);
-      }
-    });
-    console.log(tasks);
-    this.props.onRemoveCompleted(tasks);
+    this.props.onRemoveCompleted();
   };
   render() {
+    const { taskName } = this.state;
     return (
       <div className='input-task'>
-        <input type="text" name="task" id='input-task' placeholder='Add task' onChange={this.handleChangeTask} onKeyDown={this.handleKeyDown} />
+        <input
+          type="text"
+          name="task"
+          id='input-task'
+          placeholder='Add task'
+          onChange={this.handleChangeTask}
+          onKeyDown={this.handleKeyDown}
+          value={taskName}
+        />
         <button onClick={this.handleAddTask}>
-          <FontAwesomeIcon icon="fa-solid fa-plus" style={{
-            color: "rgb(25, 118, 210)",
-            fontSize: "2.4rem",
-            }} />
+          <FontAwesomeIcon
+            icon="fa-solid fa-plus"
+            style={{
+              color: "rgb(25, 118, 210)",
+              fontSize: "2.4rem",
+            }}
+          />
         </button>
         <button onClick={this.handleRemoveAllCompletedTasks}>
           <svg style={{

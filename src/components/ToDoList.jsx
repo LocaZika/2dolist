@@ -3,50 +3,52 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
 import '../assets/scss/todolist.scss';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
 library.add(faCheck, faTrash);
 export default class ToDoList extends Component {
   constructor(props) {
-    super();
-    // this.isCompleted;
+    super(props);
   }
-  handleCheckCompleted = (id) => {
-    let tasks = this.props.tasks;
-    let selectedTask = {};
-    tasks.forEach((task, index) => {
-      if (task.id === id) {
-        let indexTask  = index;
-        let isCompleted = false;
-        task.isCompleted === false ? isCompleted = true : isCompleted = false;
-        selectedTask = {...task, isCompleted}
-        tasks[indexTask] = selectedTask;
+  handleRemoveTask(id){
+    const {onRemoveTask} = this.props;
+    const swal = withReactContent(Swal);
+    swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onRemoveTask(id);
+        swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
       }
-    });
-    this.props.onCompletedTask(tasks);
-  }
-  handleDeleteTask = (index) => {
-    let tasks = this.props.tasks;
-    tasks.splice(index, 1);
-    this.props.onDeleteTask(tasks);
+    })
   }
   render() {
-    const {tasks} = this.props;
+    const {tasks, onCompletedTask} = this.props;
     return (
       <ul className="todo-list">
         {
-          tasks.map((task, index) => {
+          tasks.map((task) => {
             const { id, name, isCompleted} = task;
             return(
               <li key={id}>
                 <button id='btn-isCompleted' onClick={
-                  () => this.handleCheckCompleted(id)
+                  () => onCompletedTask(id)
                 }>
                   <FontAwesomeIcon icon="fa-solid fa-check" className='check' />
                 </button>
                 <p className={isCompleted === true ? "completed" : null}>{name}</p>
-                <button onClick={
-                  () => this.handleDeleteTask(index)
-                }>
+                <button onClick={() => this.handleRemoveTask(id)}>
                   <FontAwesomeIcon icon="fa-solid fa-trash" className='delete' />
                 </button>
               </li>
