@@ -3,9 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../assets/scss/inputTask.scss';
-import { v4 as uuid } from 'uuid';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
 library.add(faPlus);
 export default class ToDoInput extends Component {
@@ -26,25 +25,37 @@ export default class ToDoInput extends Component {
   handleAddTask = () => {
     const {taskName} = this.state;
     const {onAddTask} = this.props;
-    if (taskName.trim() !== "") {
-      const task = {
-        id: uuid(),
-        name: taskName,
-        isCompleted: false,
-      }
-      onAddTask(task);
-      this.setState({taskName: ''});
-      toast.success("Task added successfully", {
-        icon: '🔥',
-      })
-    }else{
-      toast.error("Please enter a task", {
-        icon: '😑',
-      })
-    }
+    onAddTask(taskName);
+    this.setState({taskName: ''});
   }
   handleRemoveAllCompletedTasks = () => {
-    this.props.onRemoveCompleted();
+    const { tasks, onRemoveAllCompleted } = this.props;
+    const ids = tasks.filter(task => task.isCompleted === true).map(task => task.id);
+    const swal = withReactContent(Swal);
+    swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete them!',
+      customClass: {
+        title: 'font-size-24',
+        htmlContainer: 'font-size-16',
+        confirmButton: 'font-size-14',
+        cancelButton: 'font-size-14',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onRemoveAllCompleted(ids);
+        swal.fire(
+          'Deleted!',
+          'Your tasks have been deleted.',
+          'success'
+        )
+      }
+    })
   };
   render() {
     const { taskName } = this.state;

@@ -22,12 +22,18 @@ export default class ToDoList extends Component {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        title: 'font-size-24',
+        htmlContainer: 'font-size-16',
+        confirmButton: 'font-size-14',
+        cancelButton: 'font-size-14',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         onRemoveTask(id);
         swal.fire(
           'Deleted!',
-          'Your file has been deleted.',
+          'Your task has been deleted.',
           'success'
         )
       }

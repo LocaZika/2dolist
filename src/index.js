@@ -4,6 +4,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+document.body.style.setProperty("height", "100%", "important");
 root.render(
   <React.StrictMode>
     <App />
