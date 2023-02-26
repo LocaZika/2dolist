@@ -1,3 +1,4 @@
+@echo off
 cd ../
-npm i
+start /wait cmd /c npm i
 exit
