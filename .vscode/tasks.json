@@ -6,7 +6,7 @@
     {
       "label": "run server",
       "type": "shell",
-      "command": "cd server && json-server --watch db.json"
+      "command": "cd server && json-server --watch db.json -p 2207"
     }
   ]
 }

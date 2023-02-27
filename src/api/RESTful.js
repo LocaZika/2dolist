@@ -36,6 +36,9 @@ export const remove = async (path, id) => {
 export const update = async (path, id, data) => {
   return send("PATCH", `${path}/${id}`, data);
 };
+export const filter = async (path, text) => {
+  return send("GET", `${path}?=${text}`);
+};
 export default class RESTful {
   constructor(path, data) {
     this.path = path;
@@ -81,5 +84,14 @@ export default class RESTful {
       } else resourcePath = this.path;
     } else resourcePath = path;
     return send("DELETE", resourcePath, id);
+  };
+  filter = async (path, text) => {
+    let resourcePath = "";
+    if (path === null) {
+      if (this.path === null) {
+        this.missingPath();
+      } else resourcePath = this.path;
+    } else resourcePath = path;
+    return send("GET", `${resourcePath}?=${text}`);
   };
 }

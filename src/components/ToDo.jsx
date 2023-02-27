@@ -4,14 +4,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import ToDoInput from './ToDoInput';
 import ToDoList from './ToDoList';
 import { v4 as uuid } from 'uuid';
-import { get, post, update, remove } from '../api/RESTful';
+import { get, post, update, remove, filter } from '../api/RESTful';
 import logger from '../api/consoleLog';
+import ToDoSearch from './ToDoSearch';
+import debounce from '../api/debounce';
 
 export default class ToDo extends Component {
   constructor() {
     super();
     this.state = {
       tasks: [],
+      searchResults:[],
     };
     this.tasks = this.state.tasks;
   }
@@ -112,10 +115,30 @@ export default class ToDo extends Component {
       });
     }
   }
+  handleSearchTask = (keywords) => {
+    const tasks = this.state.tasks;
+    const filteredTasks = tasks.filter(task => task.name.toLowerCase().includes(keywords.toLowerCase()));
+    if(keywords.trim() == "" || keywords.trim() == null){
+      this.setState({tasks: tasks})
+      console.log("check keyworks null");
+    }
+    try {
+      const searchFunction = () => filter('task', keywords);
+      debounce(searchFunction, 1000)
+      this.setState({tasks: filteredTasks});
+    }catch (e) {
+      logger(e, {
+        color:'red',
+        fontSize: '24px',
+        border: '1px'
+      });
+    }
+  }
   render() {
     const tasks = this.state.tasks;
     return (
       <div className='todo'>
+        <ToDoSearch onSearch={this.handleSearchTask} />
         <ToDoList
           tasks={tasks}
           onCompletedTask={this.handleCompletedTask}
